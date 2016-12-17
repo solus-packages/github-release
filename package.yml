@@ -1,0 +1,32 @@
+name       : github-release
+version    : 0.6.2
+release    : 1
+source     :
+    - https://github.com/aktau/github-release/archive/v0.6.2.tar.gz : 0f434345519664193d4ab270ea0150a31d604224e09b58dc948fa5930c5551ee
+license    : MIT
+component  : programming.tools
+networking : yes
+extract    : no
+summary    : Commandline app to create and edit releases on Github (and upload artifacts)
+description: |
+    Commandline app to create and edit releases on Github (and upload artifacts)
+builddeps  :
+    - git
+    - golang
+setup      : |
+    export GOPATH=$workdir
+    mkdir -p {bin,pkg,src}
+    mkdir -p src/github.com/aktau/
+    cd src/github.com/aktau
+    tar xf $sources/v${version}.tar.gz
+    mv github-release-$version github-release
+    cd $workdir
+    go get github.com/dustin/go-humanize
+    go get github.com/voxelbrain/goptions
+build      : |
+    export GOPATH=$workdir
+    cd src/github.com/aktau/github-release/
+    %make bin/linux/amd64/github-release
+install    : |
+    cd src/github.com/aktau/github-release/
+    install -Dm00755 bin/linux/amd64/github-release $installdir/usr/bin/github-release
